@@ -26,9 +26,10 @@ def build_prompt(pregunta: str, chunks: list[str]) -> str:
     return PROMPT_TEMPLATE.format(contexto=contexto, pregunta=pregunta)
 
 
-def generate_answer(pregunta: str, n_results: int = 3) -> str:
+def generate_answer(pregunta: str, n_results: int = 3) -> dict:
     results = query_index(pregunta, n_results=n_results)
     chunks = results["documents"][0]
+    distancias = results["distances"][0]
 
     prompt = build_prompt(pregunta, chunks)
 
@@ -38,10 +39,16 @@ def generate_answer(pregunta: str, n_results: int = 3) -> str:
         messages=[{"role": "user", "content": prompt}],
     )
 
-    return response.choices[0].message.content
+    return {
+        "respuesta": response.choices[0].message.content,
+        "fuentes": [
+            {"chunk": chunk, "distancia": distancia}
+            for chunk, distancia in zip(chunks, distancias)
+        ],
+    }
 
 
 if __name__ == "__main__":
     pregunta = "¿cuánto puede pedir de depósito el dueño del departamento?"
-    respuesta = generate_answer(pregunta)
-    print(respuesta)
+    resultado = generate_answer(pregunta)
+    print(resultado["respuesta"])
