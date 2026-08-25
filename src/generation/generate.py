@@ -26,7 +26,7 @@ def build_prompt(pregunta: str, chunks: list[str]) -> str:
     return PROMPT_TEMPLATE.format(contexto=contexto, pregunta=pregunta)
 
 
-def generate_answer(pregunta: str, n_results: int = 3) -> dict:
+def generate_answer(pregunta: str, n_results: int = 5) -> dict:
     results = query_index(pregunta, n_results=n_results)
     chunks = results["documents"][0]
     distancias = results["distances"][0]

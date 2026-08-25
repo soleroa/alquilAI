@@ -1,12 +1,12 @@
 import chromadb
 from sentence_transformers import SentenceTransformer
 
-from src.retrieval.indexer import CHROMA_DB_PATH, COLLECTION_NAME
+from src.retrieval.indexer import CHROMA_DB_PATH, COLLECTION_NAME, EMBEDDING_MODEL
 
 
-def query_index(pregunta: str, n_results: int = 3):
-    model = SentenceTransformer("all-MiniLM-L6-v2")
-    query_embedding = model.encode([pregunta])
+def query_index(pregunta: str, n_results: int = 5):
+    model = SentenceTransformer(EMBEDDING_MODEL)
+    query_embedding = model.encode([f"query: {pregunta}"], normalize_embeddings=True)
 
     client = chromadb.PersistentClient(path=CHROMA_DB_PATH)
     collection = client.get_collection(COLLECTION_NAME)

@@ -141,7 +141,7 @@ python -m src.generation.generate
 
 **RAG pipeline (Python)**
 - [ChromaDB](https://www.trychroma.com/) — vector database
-- [sentence-transformers](https://www.sbert.net/) (`all-MiniLM-L6-v2`) — text embeddings
+- [sentence-transformers](https://www.sbert.net/) (`intfloat/multilingual-e5-small`) — text embeddings
 - [Groq](https://groq.com/) — LLM inference (`openai/gpt-oss-20b`)
 - [FastAPI](https://fastapi.tiangolo.com/) — exposes the pipeline over HTTP
 

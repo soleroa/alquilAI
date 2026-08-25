@@ -1,6 +1,8 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import ReactMarkdown, { type Components } from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 interface Fuente {
   chunk: string;
@@ -13,6 +15,58 @@ interface QueryResult {
 }
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
+
+const markdownComponents: Components = {
+  p: ({ children }) => <p className="mb-3 last:mb-0">{children}</p>,
+  strong: ({ children }) => <strong className="font-semibold">{children}</strong>,
+  ul: ({ children }) => (
+    <ul className="mb-3 list-disc space-y-1 pl-5 last:mb-0">{children}</ul>
+  ),
+  ol: ({ children }) => (
+    <ol className="mb-3 list-decimal space-y-1 pl-5 last:mb-0">{children}</ol>
+  ),
+  h1: ({ children }) => (
+    <h3 className="mb-2 mt-4 text-base font-semibold first:mt-0">{children}</h3>
+  ),
+  h2: ({ children }) => (
+    <h3 className="mb-2 mt-4 text-base font-semibold first:mt-0">{children}</h3>
+  ),
+  h3: ({ children }) => (
+    <h3 className="mb-2 mt-4 text-base font-semibold first:mt-0">{children}</h3>
+  ),
+  a: ({ children, href }) => (
+    <a
+      href={href}
+      target="_blank"
+      rel="noreferrer"
+      className="underline underline-offset-2"
+    >
+      {children}
+    </a>
+  ),
+  table: ({ children }) => (
+    <div className="mb-3 overflow-x-auto last:mb-0">
+      <table className="w-full border-collapse text-left text-sm">
+        {children}
+      </table>
+    </div>
+  ),
+  thead: ({ children }) => (
+    <thead className="border-b border-zinc-300 dark:border-zinc-700">
+      {children}
+    </thead>
+  ),
+  th: ({ children }) => (
+    <th className="px-3 py-2 font-medium text-zinc-600 dark:text-zinc-300">
+      {children}
+    </th>
+  ),
+  td: ({ children }) => (
+    <td className="border-t border-zinc-200 px-3 py-2 align-top dark:border-zinc-800">
+      {children}
+    </td>
+  ),
+};
 
 export default function Home() {
   const [pregunta, setPregunta] = useState("");
@@ -89,9 +143,11 @@ export default function Home() {
               <h2 className="mb-2 text-sm font-medium text-zinc-500 dark:text-zinc-400">
                 Respuesta
               </h2>
-              <p className="whitespace-pre-wrap text-black dark:text-zinc-50">
-                {resultado.respuesta}
-              </p>
+              <div className="text-black dark:text-zinc-50">
+                <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
+                  {resultado.respuesta}
+                </ReactMarkdown>
+              </div>
             </div>
 
             <div className="flex flex-col gap-2">
